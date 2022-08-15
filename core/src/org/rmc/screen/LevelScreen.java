@@ -18,6 +18,7 @@ import org.rmc.entity.block.BlockScroll;
 import org.rmc.entity.block.BlockTreasure;
 import org.rmc.entity.block.OpenBlock;
 import org.rmc.framework.base.BaseActor;
+import org.rmc.framework.base.BaseGame;
 import org.rmc.framework.base.BaseScreen;
 import org.rmc.framework.tilemap.TilemapActor;
 import com.badlogic.gdx.maps.MapObject;
@@ -110,9 +111,8 @@ public class LevelScreen extends BaseScreen {
                 (float) goalProperties.get("width"), (float) goalProperties.get("height"),
                 this.mainStage);
 
-        // TODO set score and lives with MainGame data
-        this.score = 0;
-        this.lives = 5;
+        this.score = MainGame.getScore();
+        this.lives = MainGame.getLives();
 
         this.key = false;
         this.royal = false;
@@ -256,7 +256,12 @@ public class LevelScreen extends BaseScreen {
         }
 
         if (this.player.overlaps(this.goal) && this.key && this.royal) {
-            System.out.println("WIN!");
+            this.player.remove();
+            MainGame.setLives(this.lives);
+            MainGame.setScore(this.score);
+            MainGame.incrementLevel();
+            // TODO for each 5 levels, it makes a transition
+            BaseGame.setActiveScreen(new LevelScreen());
         }
 
     }
@@ -288,6 +293,7 @@ public class LevelScreen extends BaseScreen {
         } else if (block instanceof BlockKey) {
             this.key = true;
         } else if (block instanceof BlockRoyal) {
+            this.score += 50;
             this.royal = true;
         }
     }

@@ -13,8 +13,12 @@ public class MainGame extends BaseGame {
     public static final int SOUTH = 2;
     public static final int WEST = 3;
 
-    private static int numberMummies = 2;
-    private static int mummyRange = 200;
+    private static int numberMummies = 1;
+    private static int mummyRange = 100;
+
+    private static int lives = 5;
+    private static int score = 0;
+    private static int level = 1;
 
     @Override
     public void create() {
@@ -30,12 +34,50 @@ public class MainGame extends BaseGame {
         MainGame.numberMummies = numberMummies;
     }
 
+    public static void incrementNumberMummies() {
+        if (numberMummies < 9)
+            numberMummies++;
+    }
+
+    public static void decrementNumberMummies() {
+        if (numberMummies > 0)
+            numberMummies--;
+    }
+
     public static int getMummyRange() {
         return mummyRange;
     }
 
     public static void setMummyRange(int mummyRange) {
         MainGame.mummyRange = mummyRange;
+    }
+
+    public static int getLives() {
+        return lives;
+    }
+
+    public static void setLives(int lives) {
+        MainGame.lives = lives;
+    }
+
+    public static int getScore() {
+        return score;
+    }
+
+    public static void setScore(int score) {
+        MainGame.score = score;
+    }
+
+    public static int getLevel() {
+        return level;
+    }
+
+    public static void setLevel(int level) {
+        MainGame.level = level;
+    }
+
+    public static void incrementLevel() {
+        level++;
     }
 
 }

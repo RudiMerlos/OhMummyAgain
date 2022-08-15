@@ -29,6 +29,7 @@ public class BlockMummy extends Block {
             float x = this.getX() + this.getWidth();
             float y = this.getY() - mummy.getHeight();
             mummy.centerAtPosition(x, y);
+            MainGame.setNumberMummies(MainGame.getNumberMummies() + 1);
         }
     }
 
