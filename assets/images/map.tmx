@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="41" height="31" tilewidth="24" tileheight="24" infinite="0" nextlayerid="13" nextobjectid="1408">
+<map version="1.2" tiledversion="1.3.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0" width="41" height="31" tilewidth="24" tileheight="24" infinite="0" nextlayerid="14" nextobjectid="1412">
  <tileset firstgid="1" name="wall" tilewidth="48" tileheight="48" tilecount="1" columns="1">
   <image source="wall.png" width="48" height="48"/>
  </tileset>
@@ -5136,7 +5136,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="12" name="Limits">
+ <objectgroup id="12" name="Limits" visible="0">
   <object id="1299" x="0" y="120" width="384" height="48">
    <properties>
     <property name="name" value="solid"/>

@@ -13,6 +13,9 @@ public class MainGame extends BaseGame {
     public static final int SOUTH = 2;
     public static final int WEST = 3;
 
+    public static final String TITLE_COLOR = "f36110";
+    public static final String SCORE_COLOR = "5171ff";
+
     private static int numberMummies = 1;
     private static int mummyRange = 100;
 
@@ -50,6 +53,10 @@ public class MainGame extends BaseGame {
 
     public static void setMummyRange(int mummyRange) {
         MainGame.mummyRange = mummyRange;
+    }
+
+    public static void incrementMummyRange() {
+        mummyRange += 100;
     }
 
     public static int getLives() {

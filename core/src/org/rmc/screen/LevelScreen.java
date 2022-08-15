@@ -21,9 +21,12 @@ import org.rmc.framework.base.BaseActor;
 import org.rmc.framework.base.BaseGame;
 import org.rmc.framework.base.BaseScreen;
 import org.rmc.framework.tilemap.TilemapActor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class LevelScreen extends BaseScreen {
 
@@ -37,6 +40,13 @@ public class LevelScreen extends BaseScreen {
     private int lives;
     private boolean key;
     private boolean royal;
+
+    private boolean scroll;
+
+    private Label scoreTitleLabel;
+    private Label scoreLabel;
+    private Label livesLabel;
+    private Table livesTable;
 
     @Override
     public void initialize() {
@@ -116,6 +126,36 @@ public class LevelScreen extends BaseScreen {
 
         this.key = false;
         this.royal = false;
+
+        this.scroll = false;
+
+        Color color = Color.valueOf(MainGame.TITLE_COLOR);
+        BaseGame.setColorFont(color);
+        this.scoreTitleLabel = new Label("SCORE", BaseGame.labelStyle);
+        this.scoreTitleLabel.setColor(color);
+
+        BaseGame.setColorFont(color);
+        this.livesLabel = new Label("MEN", BaseGame.labelStyle);
+        this.livesLabel.setColor(color);
+
+        color = Color.valueOf(MainGame.SCORE_COLOR);
+        BaseGame.setColorFont(color);
+        this.scoreLabel = new Label(this.getScoreString(), BaseGame.labelStyle);
+        this.scoreLabel.setColor(color);
+
+        this.livesTable = new Table();
+        for (int i = 0; i < this.lives; i++) {
+            BaseActor liveIcon = new BaseActor(0, 0, this.uiStage);
+            liveIcon.loadTexture("images/player_icon.png");
+            this.livesTable.add(liveIcon);
+        }
+
+        this.uiTable.left().top();
+        this.uiTable.pad(50);
+        this.uiTable.add(this.scoreTitleLabel).width(200);
+        this.uiTable.add(this.scoreLabel).width(250);
+        this.uiTable.add(this.livesLabel).width(100);
+        this.uiTable.add(this.livesTable);
     }
 
     // create different types of blocks in random location
@@ -250,16 +290,26 @@ public class LevelScreen extends BaseScreen {
 
         for (BaseActor mummy : BaseActor.getList(this.mainStage, Mummy.class)) {
             if (this.player.overlaps(mummy, 0.8f)) {
-                this.lives--;
                 mummy.remove();
+                MainGame.decrementNumberMummies();
+                if (this.scroll) {
+                    this.scroll = false;
+                } else {
+                    if (this.lives > 0)
+                        this.lives--;
+                    this.livesTable.removeActorAt(this.lives, false);
+                    if (this.lives == 0)
+                        this.player.remove();
+                }
             }
         }
 
         if (this.player.overlaps(this.goal) && this.key && this.royal) {
+            this.player.setPosition(-10000, -10000);
             this.player.remove();
             MainGame.setLives(this.lives);
             MainGame.setScore(this.score);
-            MainGame.incrementLevel();
+            MainGame.incrementNumberMummies();
             // TODO for each 5 levels, it makes a transition
             BaseGame.setActiveScreen(new LevelScreen());
         }
@@ -290,12 +340,24 @@ public class LevelScreen extends BaseScreen {
     private void checkForBlockValue(Block block) {
         if (block instanceof BlockTreasure) {
             this.score += 5;
+            this.scoreLabel.setText(this.getScoreString());
         } else if (block instanceof BlockKey) {
             this.key = true;
         } else if (block instanceof BlockRoyal) {
             this.score += 50;
+            this.scoreLabel.setText(this.getScoreString());
             this.royal = true;
+        } else if (block instanceof BlockScroll) {
+            this.scroll = true;
         }
+    }
+
+    private String getScoreString() {
+        String scoreStr = String.valueOf(this.score);
+        StringBuilder score = new StringBuilder(scoreStr);
+        for (int i = 0; i < 5 - scoreStr.length(); i++)
+            score.insert(0, '0');
+        return score.toString();
     }
 
 }

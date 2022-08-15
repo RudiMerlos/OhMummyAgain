@@ -28,6 +28,8 @@ public abstract class BaseGame extends Game {
     // NPD + BitmapFont + Color
     public static final TextButtonStyle textButtonStyle = new TextButtonStyle();
 
+    private static Color colorFont = Color.WHITE;
+
     /**
      * Called when game is initialized. Stores global reference to game object.
      */
@@ -46,10 +48,10 @@ public abstract class BaseGame extends Game {
         FreeTypeFontGenerator fontGenerator =
                 new FreeTypeFontGenerator(Gdx.files.internal("fonts/zx-spectrum.ttf"));
         FreeTypeFontParameter fontParameters = new FreeTypeFontParameter();
-        fontParameters.size = 36;
-        fontParameters.color = Color.WHITE;
-        fontParameters.borderWidth = 2;
-        fontParameters.borderColor = Color.BLACK;
+        fontParameters.size = 24;
+        fontParameters.color = colorFont;
+        fontParameters.borderWidth = 1;
+        fontParameters.borderColor = colorFont;
         fontParameters.borderStraight = true;
         fontParameters.minFilter = TextureFilter.Linear;
         fontParameters.magFilter = TextureFilter.Linear;
@@ -71,6 +73,10 @@ public abstract class BaseGame extends Game {
      */
     public static void setActiveScreen(BaseScreen screen) {
         game.setScreen(screen);
+    }
+
+    public static void setColorFont(Color color) {
+        colorFont = color;
     }
 
 }
