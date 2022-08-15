@@ -24,7 +24,8 @@ public class Mummy extends BaseActor {
     private int crossChange;
     private static final int MAX_CROSS_CHANGE = 10;
 
-    public Mummy(float x, float y, Stage stage, Player player, float speed, float range) {
+    public Mummy(float x, float y, Stage stage, Player player, float speed, float range,
+            int direction) {
         super(x, y, stage);
         this.stage = stage;
         this.player = player;
@@ -64,11 +65,26 @@ public class Mummy extends BaseActor {
         this.animations.add(WEST,
                 new Animation<>(frameDuration, textureArray, Animation.PlayMode.LOOP_PINGPONG));
 
-        this.setAnimation(this.animations.get(EAST));
+        switch (direction) {
+            case EAST:
+                this.facingAngle = 0;
+                break;
+            case WEST:
+                this.facingAngle = 180;
+                break;
+            case NORTH:
+                this.facingAngle = 90;
+                break;
+            default:
+                break;
+        }
+        this.setAnimation(this.animations.get(direction));
+
         this.setBoundaryRectangle();
         this.setAcceleration(BaseActor.MAX_ACCELERATION);
         this.setMaxSpeed(speed);
         this.setDeceleration(BaseActor.MAX_DECELERATION);
+
         this.crossChange = 0;
     }
 

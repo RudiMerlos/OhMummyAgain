@@ -13,8 +13,8 @@ public class MainGame extends BaseGame {
     public static final int SOUTH = 2;
     public static final int WEST = 3;
 
-    private static int numberMummies = 4;
-    private static int mummySpeed = 150;
+    private static int numberMummies = 8;
+    private static int mummySpeed = 140;
     private static int mummyRange = 200;
 
     @Override

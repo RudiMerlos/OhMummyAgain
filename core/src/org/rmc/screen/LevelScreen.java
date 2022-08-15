@@ -96,13 +96,44 @@ public class LevelScreen extends BaseScreen {
         // mummy
         MapProperties mummyLeft = tma.getRectangleList("mummy_start_left").get(0).getProperties();
         MapProperties mummyRight = tma.getRectangleList("mummy_start_right").get(0).getProperties();
+        float xLeft = (float) mummyLeft.get("x");
+        float yLeft = (float) mummyLeft.get("y");
+        float xRight = (float) mummyRight.get("x");
+        float yRight = (float) mummyRight.get("y");
+        int mummyNumberLeft = 0;
+        int mummyNumberRight = 0;
         for (int i = 0; i < MainGame.getNumberMummies(); i++) {
-            if (i % 2 == 0)
-                new Mummy((float) mummyLeft.get("x"), (float) mummyLeft.get("y"), this.mainStage,
-                        this.player, MainGame.getMummySpeed(), MainGame.getMummyRange());
-            else
-                new Mummy((float) mummyRight.get("x"), (float) mummyRight.get("y"), this.mainStage,
-                        this.player, MainGame.getMummySpeed(), MainGame.getMummySpeed());
+            if (i % 2 == 0) {
+                if (mummyNumberLeft == 0) {
+                    new Mummy((float) mummyLeft.get("x"), (float) mummyLeft.get("y"),
+                            this.mainStage, this.player, MainGame.getMummySpeed(),
+                            MainGame.getMummyRange(), MainGame.EAST);
+                } else if (mummyNumberLeft % 2 != 0) {
+                    xLeft += 48;
+                    new Mummy(xLeft, (float) mummyLeft.get("y"), this.mainStage, this.player,
+                            MainGame.getMummySpeed(), MainGame.getMummyRange(), MainGame.EAST);
+                } else {
+                    yLeft += 48;
+                    new Mummy((float) mummyLeft.get("x"), yLeft, this.mainStage, this.player,
+                            MainGame.getMummySpeed(), MainGame.getMummyRange(), MainGame.NORTH);
+                }
+                mummyNumberLeft++;
+            } else {
+                if (mummyNumberRight == 0) {
+                    new Mummy((float) mummyRight.get("x"), (float) mummyRight.get("y"),
+                            this.mainStage, this.player, MainGame.getMummySpeed(),
+                            MainGame.getMummySpeed(), MainGame.WEST);
+                } else if (mummyNumberRight % 2 != 0) {
+                    xRight -= 48;
+                    new Mummy(xRight, (float) mummyRight.get("y"), this.mainStage, this.player,
+                            MainGame.getMummySpeed(), MainGame.getMummySpeed(), MainGame.WEST);
+                } else {
+                    yRight += 48;
+                    new Mummy((float) mummyRight.get("x"), yRight, this.mainStage, this.player,
+                            MainGame.getMummySpeed(), MainGame.getMummySpeed(), MainGame.NORTH);
+                }
+                mummyNumberRight++;
+            }
         }
 
         // goal
