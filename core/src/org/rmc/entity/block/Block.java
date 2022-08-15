@@ -5,15 +5,18 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public abstract class Block extends BaseActor {
 
-    public enum BlockType { EMPTY, TREASURE, KEY, ROYAL, SCROLL }
+    public enum BlockType {
+        EMPTY, TREASURE, KEY, ROYAL, MUMMY, SCROLL
+    }
 
     private boolean discovered;
 
     private int idBlock;
 
-    protected Block(float x, float y, Stage stage, String fileName, int idBlock) {
+    protected Block(float x, float y, Stage stage, String fileName, int idBlock,
+            float frameDuration) {
         super(x, y, stage);
-        this.loadAnimationFromSheet(fileName, 1, 13, 0.05f, false);
+        this.loadAnimationFromSheet(fileName, 1, 13, frameDuration, false);
         this.setBoundaryRectangle();
         this.setAnimationPaused(true);
         this.discovered = false;

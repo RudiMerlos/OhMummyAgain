@@ -24,8 +24,7 @@ public class Mummy extends BaseActor {
     private int crossChange;
     private static final int MAX_CROSS_CHANGE = 10;
 
-    public Mummy(float x, float y, Stage stage, Player player, float speed, float range,
-            int direction) {
+    public Mummy(float x, float y, Stage stage, Player player, float range, int direction) {
         super(x, y, stage);
         this.stage = stage;
         this.player = player;
@@ -82,7 +81,7 @@ public class Mummy extends BaseActor {
 
         this.setBoundaryRectangle();
         this.setAcceleration(BaseActor.MAX_ACCELERATION);
-        this.setMaxSpeed(speed);
+        this.setMaxSpeed(140);
         this.setDeceleration(BaseActor.MAX_DECELERATION);
 
         this.crossChange = 0;

@@ -14,7 +14,6 @@ public class MainGame extends BaseGame {
     public static final int WEST = 3;
 
     private static int numberMummies = 2;
-    private static int mummySpeed = 140;
     private static int mummyRange = 200;
 
     @Override
@@ -29,14 +28,6 @@ public class MainGame extends BaseGame {
 
     public static void setNumberMummies(int numberMummies) {
         MainGame.numberMummies = numberMummies;
-    }
-
-    public static int getMummySpeed() {
-        return mummySpeed;
-    }
-
-    public static void setMummySpeed(int mummySpeed) {
-        MainGame.mummySpeed = mummySpeed;
     }
 
     public static int getMummyRange() {

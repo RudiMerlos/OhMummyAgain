@@ -12,6 +12,7 @@ import org.rmc.entity.block.Block;
 import org.rmc.entity.block.Block.BlockType;
 import org.rmc.entity.block.BlockEmpty;
 import org.rmc.entity.block.BlockKey;
+import org.rmc.entity.block.BlockMummy;
 import org.rmc.entity.block.BlockRoyal;
 import org.rmc.entity.block.BlockScroll;
 import org.rmc.entity.block.BlockTreasure;
@@ -28,7 +29,7 @@ public class LevelScreen extends BaseScreen {
     private Player player;
     private Goal goal;
 
-    private static final int BLOCK_EMPTY = 7;
+    private static final int BLOCK_EMPTY = 6;
     private static final int BLOCK_TREASURE = 10;
 
     private int score;
@@ -48,24 +49,6 @@ public class LevelScreen extends BaseScreen {
                     this.mainStage);
         }
 
-        // blocks
-        this.initializeBlocks(tma);
-
-        // open blocks
-        for (MapObject object : tma.getRectangleList("open_block")) {
-            MapProperties properties = object.getProperties();
-            new OpenBlock((float) properties.get("x"), (float) properties.get("y"),
-                    (float) properties.get("width"), (float) properties.get("height"),
-                    this.mainStage, Integer.parseInt((String) properties.get("id")));
-        }
-
-        // footprints
-        for (MapObject object : tma.getRectangleList("footprint")) {
-            MapProperties properties = object.getProperties();
-            new Footprint((float) properties.get("x"), (float) properties.get("y"), this.mainStage,
-                    ((String) properties.get("step")).equals("left"));
-        }
-
         // direction
         for (MapObject object : tma.getRectangleList("direction")) {
             MapProperties properties = object.getProperties();
@@ -77,6 +60,13 @@ public class LevelScreen extends BaseScreen {
             new Direction((float) properties.get("x"), (float) properties.get("y"),
                     (float) properties.get("width"), (float) properties.get("height"),
                     this.mainStage, direction);
+        }
+
+        // footprints
+        for (MapObject object : tma.getRectangleList("footprint")) {
+            MapProperties properties = object.getProperties();
+            new Footprint((float) properties.get("x"), (float) properties.get("y"), this.mainStage,
+                    ((String) properties.get("step")).equals("left"));
         }
 
         // player
@@ -101,6 +91,17 @@ public class LevelScreen extends BaseScreen {
 
         // mummy
         this.initializeMummies(tma);
+
+        // blocks
+        this.initializeBlocks(tma);
+
+        // open blocks
+        for (MapObject object : tma.getRectangleList("open_block")) {
+            MapProperties properties = object.getProperties();
+            new OpenBlock((float) properties.get("x"), (float) properties.get("y"),
+                    (float) properties.get("width"), (float) properties.get("height"),
+                    this.mainStage, Integer.parseInt((String) properties.get("id")));
+        }
 
         // goal
         MapObject goalObject = tma.getRectangleList("goal").get(0);
@@ -138,6 +139,9 @@ public class LevelScreen extends BaseScreen {
             else if (types[id].equals(BlockType.ROYAL))
                 blocks[id] = new BlockRoyal((float) properties.get("x"),
                         (float) properties.get("y"), this.mainStage, idBlock++);
+            else if (types[id].equals(BlockType.MUMMY))
+                blocks[id] = new BlockMummy((float) properties.get("x"),
+                        (float) properties.get("y"), this.mainStage, idBlock++, this.player);
             else
                 blocks[id] = new BlockScroll((float) properties.get("x"),
                         (float) properties.get("y"), this.mainStage, idBlock++);
@@ -150,6 +154,7 @@ public class LevelScreen extends BaseScreen {
         int blockTreasure = 0;
         boolean blockKey = false;
         boolean blockRoyal = false;
+        boolean blockMummy = false;
         BlockType[] types = new BlockType[20];
 
         for (int i = 0; i < 20; i++) {
@@ -169,6 +174,9 @@ public class LevelScreen extends BaseScreen {
             } else if (!blockRoyal) {
                 types[index] = BlockType.ROYAL;
                 blockRoyal = true;
+            } else if (!blockMummy) {
+                types[index] = BlockType.MUMMY;
+                blockMummy = true;
             } else {
                 types[index] = BlockType.SCROLL;
             }
@@ -190,31 +198,29 @@ public class LevelScreen extends BaseScreen {
             if (i % 2 == 0) {
                 if (mummyNumberLeft == 0) {
                     new Mummy((float) mummyLeft.get("x"), (float) mummyLeft.get("y"),
-                            this.mainStage, this.player, MainGame.getMummySpeed(),
-                            MainGame.getMummyRange(), MainGame.EAST);
+                            this.mainStage, this.player, MainGame.getMummyRange(), MainGame.EAST);
                 } else if (mummyNumberLeft % 2 != 0) {
                     xLeft += 48;
                     new Mummy(xLeft, (float) mummyLeft.get("y"), this.mainStage, this.player,
-                            MainGame.getMummySpeed(), MainGame.getMummyRange(), MainGame.EAST);
+                            MainGame.getMummyRange(), MainGame.EAST);
                 } else {
                     yLeft += 48;
                     new Mummy((float) mummyLeft.get("x"), yLeft, this.mainStage, this.player,
-                            MainGame.getMummySpeed(), MainGame.getMummyRange(), MainGame.NORTH);
+                            MainGame.getMummyRange(), MainGame.NORTH);
                 }
                 mummyNumberLeft++;
             } else {
                 if (mummyNumberRight == 0) {
                     new Mummy((float) mummyRight.get("x"), (float) mummyRight.get("y"),
-                            this.mainStage, this.player, MainGame.getMummySpeed(),
-                            MainGame.getMummySpeed(), MainGame.WEST);
+                            this.mainStage, this.player, MainGame.getMummyRange(), MainGame.WEST);
                 } else if (mummyNumberRight % 2 != 0) {
                     xRight -= 48;
                     new Mummy(xRight, (float) mummyRight.get("y"), this.mainStage, this.player,
-                            MainGame.getMummySpeed(), MainGame.getMummySpeed(), MainGame.WEST);
+                            MainGame.getMummyRange(), MainGame.WEST);
                 } else {
                     yRight += 48;
                     new Mummy((float) mummyRight.get("x"), yRight, this.mainStage, this.player,
-                            MainGame.getMummySpeed(), MainGame.getMummySpeed(), MainGame.NORTH);
+                            MainGame.getMummyRange(), MainGame.NORTH);
                 }
                 mummyNumberRight++;
             }
@@ -242,6 +248,13 @@ public class LevelScreen extends BaseScreen {
             }
         }
 
+        for (BaseActor mummy : BaseActor.getList(this.mainStage, Mummy.class)) {
+            if (this.player.overlaps(mummy, 0.8f)) {
+                this.lives--;
+                mummy.remove();
+            }
+        }
+
         if (this.player.overlaps(this.goal) && this.key && this.royal) {
             System.out.println("WIN!");
         }
@@ -263,19 +276,19 @@ public class LevelScreen extends BaseScreen {
 
                 if (block.isDiscovered()) {
                     block.setAnimationPaused(false);
-
-                    if (block instanceof BlockTreasure) {
-                        this.score += 5;
-                        System.out.println("Score: " + this.score);
-                    } else if (block instanceof BlockKey) {
-                        this.key = true;
-                        System.out.println("KEY");
-                    } else if (block instanceof BlockRoyal) {
-                        this.royal = true;
-                        System.out.println("ROYAL");
-                    }
+                    this.checkForBlockValue(block);
                 }
             }
+        }
+    }
+
+    private void checkForBlockValue(Block block) {
+        if (block instanceof BlockTreasure) {
+            this.score += 5;
+        } else if (block instanceof BlockKey) {
+            this.key = true;
+        } else if (block instanceof BlockRoyal) {
+            this.royal = true;
         }
     }
 
