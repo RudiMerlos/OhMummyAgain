@@ -305,8 +305,8 @@ public class LevelScreen extends BaseScreen {
         }
 
         if (this.player.overlaps(this.goal) && this.key && this.royal) {
-            this.player.setPosition(-10000, -10000);
             this.player.remove();
+            this.player.setPosition(-10000, -10000);
             MainGame.setLives(this.lives);
             MainGame.setScore(this.score);
             MainGame.incrementNumberMummies();
