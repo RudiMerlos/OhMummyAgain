@@ -322,15 +322,17 @@ public class LevelScreen extends BaseScreen {
             Block block = (Block) blockActor;
             this.player.preventOverlap(block);
 
+            boolean discovered = false;
             if (!block.isDiscovered()) {
-                block.setDiscovered(true);
+                discovered = true;
                 for (BaseActor actor : BaseActor.getList(this.mainStage, OpenBlock.class)) {
                     OpenBlock openBlock = (OpenBlock) actor;
                     if (openBlock.getId() == block.getIdBlock())
-                        block.setDiscovered(false);
+                        discovered = false;
                 }
 
-                if (block.isDiscovered()) {
+                if (discovered) {
+                    block.setDiscovered(true);
                     block.setAnimationPaused(false);
                     this.checkForBlockValue(block);
                 }
@@ -371,7 +373,7 @@ public class LevelScreen extends BaseScreen {
 
     @Override
     public boolean keyDown(int keycode) {
-        if (keycode == Keys.H) {
+        if (keycode == Keys.ESCAPE) {
             this.paused = !this.paused;
             sleep(100);
         }
