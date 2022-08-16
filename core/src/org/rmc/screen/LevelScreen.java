@@ -1,6 +1,5 @@
 package org.rmc.screen;
 
-import java.util.List;
 import org.rmc.MainGame;
 import org.rmc.entity.CrossPoint;
 import org.rmc.entity.Direction;
