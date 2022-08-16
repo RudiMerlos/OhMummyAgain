@@ -25,9 +25,9 @@ public class BlockMummy extends Block {
         if (this.isAnimationFinished() && !this.mummyDiscovered) {
             this.mummyDiscovered = true;
             Mummy mummy = new Mummy(0, 0, this.stage, this.player, MainGame.getMummyRange(),
-                    MainGame.SOUTH);
-            float x = this.getX() + this.getWidth();
-            float y = this.getY() - mummy.getHeight() + 24;
+                    MainGame.EAST);
+            float x = this.getX() + this.getWidth() - mummy.getWidth() / 2;
+            float y = this.getY() - mummy.getHeight() / 2;
             mummy.centerAtPosition(x, y);
             MainGame.setNumberMummies(MainGame.getNumberMummies() + 1);
         }
