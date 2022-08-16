@@ -18,6 +18,8 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     protected Table uiTable;
 
+    protected boolean paused;
+
     protected BaseScreen() {
         this.mainStage = new Stage();
         this.uiStage = new Stage();
@@ -36,12 +38,14 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     // Gameloop
     @Override
     public void render(float delta) {
-        // 1 - Process input
-        this.mainStage.act(delta);
-        this.uiStage.act(delta);
+        if (!paused) {
+            // 1 - Process input
+            this.mainStage.act(delta);
+            this.uiStage.act(delta);
 
-        // 2 - Update game logic
-        this.update(delta);
+            // 2 - Update game logic
+            this.update(delta);
+        }
 
         // 3 - Render the graphics
         // clear the screen (if there is a background image it isn't necessary)

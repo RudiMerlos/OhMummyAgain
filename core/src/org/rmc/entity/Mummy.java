@@ -44,25 +44,25 @@ public class Mummy extends BaseActor {
         for (int c = 0; c < cols; c++)
             textureArray.add(temp[2][c]);
         this.animations.add(NORTH,
-                new Animation<>(frameDuration, textureArray, Animation.PlayMode.LOOP_PINGPONG));
+                new Animation<>(frameDuration, textureArray, Animation.PlayMode.LOOP));
 
         textureArray.clear();
         for (int c = 0; c < cols; c++)
             textureArray.add(temp[0][c]);
         this.animations.add(EAST,
-                new Animation<>(frameDuration, textureArray, Animation.PlayMode.LOOP_PINGPONG));
+                new Animation<>(frameDuration, textureArray, Animation.PlayMode.LOOP));
 
         textureArray.clear();
         for (int c = 0; c < cols; c++)
             textureArray.add(temp[3][c]);
         this.animations.add(SOUTH,
-                new Animation<>(frameDuration, textureArray, Animation.PlayMode.LOOP_PINGPONG));
+                new Animation<>(frameDuration, textureArray, Animation.PlayMode.LOOP));
 
         textureArray.clear();
         for (int c = 0; c < cols; c++)
             textureArray.add(temp[1][c]);
         this.animations.add(WEST,
-                new Animation<>(frameDuration, textureArray, Animation.PlayMode.LOOP_PINGPONG));
+                new Animation<>(frameDuration, textureArray, Animation.PlayMode.LOOP));
 
         switch (direction) {
             case EAST:

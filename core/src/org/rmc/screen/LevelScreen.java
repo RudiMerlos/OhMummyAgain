@@ -21,6 +21,7 @@ import org.rmc.framework.base.BaseActor;
 import org.rmc.framework.base.BaseGame;
 import org.rmc.framework.base.BaseScreen;
 import org.rmc.framework.tilemap.TilemapActor;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
@@ -307,13 +308,13 @@ public class LevelScreen extends BaseScreen {
         if (this.player.overlaps(this.goal) && this.key && this.royal) {
             this.player.remove();
             this.player.setPosition(-10000, -10000);
+            sleep(1000);
             MainGame.setLives(this.lives);
             MainGame.setScore(this.score);
             MainGame.incrementNumberMummies();
             // TODO for each 5 levels, it makes a transition
             BaseGame.setActiveScreen(new LevelScreen());
         }
-
     }
 
     private void checkForBlocks() {
@@ -358,6 +359,23 @@ public class LevelScreen extends BaseScreen {
         for (int i = 0; i < 5 - scoreStr.length(); i++)
             score.insert(0, '0');
         return score.toString();
+    }
+
+    private static void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        if (keycode == Keys.H) {
+            this.paused = !this.paused;
+            sleep(100);
+        }
+        return false;
     }
 
 }
