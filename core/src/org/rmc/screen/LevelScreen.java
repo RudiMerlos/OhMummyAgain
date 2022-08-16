@@ -1,5 +1,6 @@
 package org.rmc.screen;
 
+import java.util.List;
 import org.rmc.MainGame;
 import org.rmc.entity.CrossPoint;
 import org.rmc.entity.Direction;
@@ -26,6 +27,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
@@ -296,11 +299,21 @@ public class LevelScreen extends BaseScreen {
                 if (this.scroll) {
                     this.scroll = false;
                 } else {
-                    if (this.lives > 0)
+                    if (this.lives > 0) {
                         this.lives--;
-                    this.livesTable.removeActorAt(this.lives, false);
-                    if (this.lives == 0)
+                        this.livesTable.removeActorAt(this.lives, false);
+                    }
+
+                    if (this.lives == 0) {
                         this.player.remove();
+                        BaseActor gameOver = new BaseActor(0, 0, this.mainStage);
+                        gameOver.loadTexture("images/game_over.png");
+                        gameOver.setPosition(MainGame.WIDTH / 2 - gameOver.getWidth() / 2,
+                                MainGame.HEIGHT / 2 - gameOver.getHeight() / 2);
+                        Action hide = Actions.sequence(Actions.delay(5),
+                                Actions.after(Actions.removeActor()));
+                        gameOver.addAction(hide);
+                    }
                 }
             }
         }
