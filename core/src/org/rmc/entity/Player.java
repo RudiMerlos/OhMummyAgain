@@ -90,23 +90,25 @@ public class Player extends BaseActor {
     }
 
     private void movePlayer(Direction direction) {
-        if (Gdx.input.isKeyPressed(Keys.Q) && direction.getRoute()[NORTH]) {
-            this.direction = NORTH;
-            this.setAnimation(this.animations.get(NORTH));
-            this.accelerateAtAngle(90);
-        } else if (Gdx.input.isKeyPressed(Keys.A) && direction.getRoute()[SOUTH]) {
-            this.direction = SOUTH;
-            this.setAnimation(this.animations.get(SOUTH));
-            this.accelerateAtAngle(270);
-        }
-        if (Gdx.input.isKeyPressed(Keys.O) && direction.getRoute()[WEST]) {
-            this.direction = WEST;
-            this.setAnimation(this.animations.get(WEST));
-            this.accelerateAtAngle(180);
-        } else if (Gdx.input.isKeyPressed(Keys.P) && direction.getRoute()[EAST]) {
-            this.direction = EAST;
-            this.setAnimation(this.animations.get(EAST));
-            this.accelerateAtAngle(0);
+        if (this.isVisible()) {
+            if (Gdx.input.isKeyPressed(Keys.Q) && direction.getRoute()[NORTH]) {
+                this.direction = NORTH;
+                this.setAnimation(this.animations.get(NORTH));
+                this.accelerateAtAngle(90);
+            } else if (Gdx.input.isKeyPressed(Keys.A) && direction.getRoute()[SOUTH]) {
+                this.direction = SOUTH;
+                this.setAnimation(this.animations.get(SOUTH));
+                this.accelerateAtAngle(270);
+            }
+            if (Gdx.input.isKeyPressed(Keys.O) && direction.getRoute()[WEST]) {
+                this.direction = WEST;
+                this.setAnimation(this.animations.get(WEST));
+                this.accelerateAtAngle(180);
+            } else if (Gdx.input.isKeyPressed(Keys.P) && direction.getRoute()[EAST]) {
+                this.direction = EAST;
+                this.setAnimation(this.animations.get(EAST));
+                this.accelerateAtAngle(0);
+            }
         }
     }
 

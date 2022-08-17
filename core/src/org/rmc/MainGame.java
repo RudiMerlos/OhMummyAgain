@@ -16,12 +16,17 @@ public class MainGame extends BaseGame {
     public static final String TITLE_COLOR = "f36110";
     public static final String SCORE_COLOR = "5171ff";
 
-    private static int numberMummies = 1;
-    private static int mummyRange = 100;
+    public static final int INITIAL_LEVEL = 1;
+    public static final int INITIAL_LIVES = 5;
+    public static final int INITIAL_SCORE = 0;
+    public static final int INITIAL_NUMBER_MUMMIES = 1;
+    public static final int INITIAL_MUMMY_RANGE = 100;
 
-    private static int lives = 5;
-    private static int score = 0;
-    private static int level = 1;
+    private static int level = INITIAL_LEVEL;
+    private static int lives = INITIAL_LIVES;
+    private static int score = INITIAL_SCORE;
+    private static int numberMummies = INITIAL_NUMBER_MUMMIES;
+    private static int mummyRange = INITIAL_MUMMY_RANGE;
 
     @Override
     public void create() {

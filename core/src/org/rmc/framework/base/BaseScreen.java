@@ -108,6 +108,29 @@ public abstract class BaseScreen implements Screen, InputProcessor {
     @Override
     public void resume() {}
 
+    /**
+     * Helper method to generate sleep time.
+     *
+     * @param milliseconds Amount of time in milliseconds
+     */
+    public static void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean waitForTime(float milliseconds) {
+        double wait = 0;
+        double timeForWait = milliseconds * 10000;
+        do {
+            wait += Gdx.graphics.getDeltaTime();
+        } while (wait < timeForWait);
+        wait = 0;
+        return true;
+    }
+
 
     // =========================================================
     //  InputProcessor interface methods

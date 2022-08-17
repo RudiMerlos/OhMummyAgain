@@ -4,6 +4,7 @@ import org.rmc.MainGame;
 import org.rmc.entity.CrossPoint;
 import org.rmc.entity.Direction;
 import org.rmc.entity.Footprint;
+import org.rmc.entity.GameOver;
 import org.rmc.entity.Goal;
 import org.rmc.entity.Mummy;
 import org.rmc.entity.Player;
@@ -26,8 +27,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
@@ -35,6 +34,7 @@ public class LevelScreen extends BaseScreen {
 
     private Player player;
     private Goal goal;
+    private GameOver gameOver;
 
     private static final int BLOCK_EMPTY = 6;
     private static final int BLOCK_TREASURE = 10;
@@ -123,6 +123,8 @@ public class LevelScreen extends BaseScreen {
         this.goal = new Goal((float) goalProperties.get("x"), (float) goalProperties.get("y"),
                 (float) goalProperties.get("width"), (float) goalProperties.get("height"),
                 this.mainStage);
+
+        this.gameOver = null;
 
         this.score = MainGame.getScore();
         this.lives = MainGame.getLives();
@@ -305,26 +307,26 @@ public class LevelScreen extends BaseScreen {
 
                     if (this.lives == 0) {
                         this.player.remove();
-                        BaseActor gameOver = new BaseActor(0, 0, this.mainStage);
-                        gameOver.loadTexture("images/game_over.png");
-                        gameOver.setPosition(MainGame.WIDTH / 2 - gameOver.getWidth() / 2,
-                                MainGame.HEIGHT / 2 - gameOver.getHeight() / 2);
-                        Action hide = Actions.sequence(Actions.delay(5),
-                                Actions.after(Actions.removeActor()));
-                        gameOver.addAction(hide);
+                        this.gameOver = new GameOver(0, 0, this.mainStage);
                     }
                 }
             }
         }
 
-        if (this.player.overlaps(this.goal) && this.key && this.royal) {
-            this.player.remove();
+        if (this.player.overlaps(this.goal, 0.8f) && this.key && this.royal) {
+            this.player.setVisible(false);
             this.player.setPosition(-10000, -10000);
-            sleep(1000);
+            BaseScreen.waitForTime(1000);
             MainGame.setLives(this.lives);
             MainGame.setScore(this.score);
             MainGame.incrementNumberMummies();
             // TODO for each 5 levels, it makes a transition
+            BaseGame.setActiveScreen(new LevelScreen());
+        }
+
+        if (this.gameOver != null && this.gameOver.isAnimationFinished()) {
+            BaseScreen.waitForTime(2000);
+            this.reset();
             BaseGame.setActiveScreen(new LevelScreen());
         }
     }
@@ -375,19 +377,19 @@ public class LevelScreen extends BaseScreen {
         return score.toString();
     }
 
-    private static void sleep(long milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    private void reset() {
+        MainGame.setLevel(MainGame.INITIAL_LEVEL);
+        MainGame.setLives(MainGame.INITIAL_LIVES);
+        MainGame.setScore(MainGame.INITIAL_SCORE);
+        MainGame.setNumberMummies(MainGame.INITIAL_NUMBER_MUMMIES);
+        MainGame.setMummyRange(MainGame.INITIAL_MUMMY_RANGE);
     }
 
     @Override
     public boolean keyDown(int keycode) {
         if (keycode == Keys.ESCAPE) {
             this.paused = !this.paused;
-            sleep(100);
+            BaseScreen.sleep(100);
         }
         return false;
     }

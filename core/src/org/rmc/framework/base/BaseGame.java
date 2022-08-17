@@ -46,11 +46,11 @@ public abstract class BaseGame extends Game {
 
         // parameters for generating a custom bitmap font
         FreeTypeFontGenerator fontGenerator =
-                new FreeTypeFontGenerator(Gdx.files.internal("fonts/zx-spectrum.ttf"));
+                new FreeTypeFontGenerator(Gdx.files.internal("fonts/amstrad_cpc464.ttf"));
         FreeTypeFontParameter fontParameters = new FreeTypeFontParameter();
         fontParameters.size = 24;
         fontParameters.color = colorFont;
-        fontParameters.borderWidth = 1;
+        fontParameters.borderWidth = 0.5f;
         fontParameters.borderColor = colorFont;
         fontParameters.borderStraight = true;
         fontParameters.minFilter = TextureFilter.Linear;
