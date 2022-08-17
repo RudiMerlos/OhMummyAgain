@@ -12,10 +12,10 @@ public class DialogBox extends BaseActor {
     private Label dialogLabel;
     private static final float PADDING = 16;
 
-    public DialogBox(float x, float y, Stage stage) {
+    public DialogBox(float x, float y, Stage stage, String fileName) {
         super(x, y, stage);
 
-        this.loadTexture("images/dialog-translucent.png");
+        this.loadTexture(fileName);
 
         this.dialogLabel = new Label(" ", BaseGame.labelStyle);
         this.dialogLabel.setWrap(true);

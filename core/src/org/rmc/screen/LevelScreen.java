@@ -320,8 +320,15 @@ public class LevelScreen extends BaseScreen {
             MainGame.setLives(this.lives);
             MainGame.setScore(this.score);
             MainGame.incrementNumberMummies();
-            // TODO for each 5 levels, it makes a transition
-            BaseGame.setActiveScreen(new LevelScreen());
+
+            if (MainGame.getLevel() % 5 == 0) {
+                MainGame.incrementLevel();
+                MainGame.setNumberMummies(1);
+                MainGame.incrementMummyRange();
+                BaseGame.setActiveScreen(new LevelPass());
+            } else {
+                BaseGame.setActiveScreen(new LevelScreen());
+            }
         }
 
         if (this.gameOver != null && this.gameOver.isAnimationFinished()) {
