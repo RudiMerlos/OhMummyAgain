@@ -306,8 +306,10 @@ public class LevelScreen extends BaseScreen {
                     }
 
                     if (this.lives == 0) {
-                        this.player.remove();
+                        this.player.setVisible(false);
+                        this.player.setPosition(-10000, -10000);
                         this.gameOver = new GameOver(0, 0, this.mainStage);
+                        this.player.remove();
                     }
                 }
             }
@@ -320,9 +322,13 @@ public class LevelScreen extends BaseScreen {
             MainGame.setLives(this.lives);
             MainGame.setScore(this.score);
             MainGame.incrementNumberMummies();
+            MainGame.incrementLevel();
 
-            if (MainGame.getLevel() % 5 == 0) {
-                MainGame.incrementLevel();
+            if ((MainGame.getLevel() - 1) % 5 == 0) {
+                if ((MainGame.getLevel() % 10 - 1) == 0)
+                    MainGame.setLives(this.lives + 1);
+                else
+                    MainGame.setScore(this.score + 200);
                 MainGame.setNumberMummies(1);
                 MainGame.incrementMummyRange();
                 BaseGame.setActiveScreen(new LevelPass());

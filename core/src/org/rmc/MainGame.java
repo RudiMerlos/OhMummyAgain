@@ -20,7 +20,7 @@ public class MainGame extends BaseGame {
     public static final int INITIAL_LIVES = 5;
     public static final int INITIAL_SCORE = 0;
     public static final int INITIAL_NUMBER_MUMMIES = 1;
-    public static final int INITIAL_MUMMY_RANGE = 100;
+    public static final int INITIAL_MUMMY_RANGE = 80;
 
     private static int level = INITIAL_LEVEL;
     private static int lives = INITIAL_LIVES;
@@ -61,7 +61,7 @@ public class MainGame extends BaseGame {
     }
 
     public static void incrementMummyRange() {
-        mummyRange += 100;
+        mummyRange += INITIAL_MUMMY_RANGE;
     }
 
     public static int getLives() {
