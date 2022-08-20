@@ -23,7 +23,9 @@ import org.rmc.framework.base.BaseActor;
 import org.rmc.framework.base.BaseGame;
 import org.rmc.framework.base.BaseScreen;
 import org.rmc.framework.tilemap.TilemapActor;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
@@ -60,6 +62,11 @@ public class LevelScreen extends BaseScreen {
     private Label levelPassLabel;
 
     private boolean levelPassed;
+
+    private Sound coinSound;
+    private Sound dieSound;
+    private Sound keySound;
+    private Sound levelSound;
 
     @Override
     public void initialize() {
@@ -203,6 +210,11 @@ public class LevelScreen extends BaseScreen {
         this.levelPassTable.add(this.levelLabel).left().padBottom(20);
         this.levelPassTable.row();
         this.levelPassTable.add(this.levelPassLabel).colspan(2).center().padTop(20);
+
+        this.coinSound = Gdx.audio.newSound(Gdx.files.internal("sounds/coin.ogg"));
+        this.dieSound = Gdx.audio.newSound(Gdx.files.internal("sounds/die.ogg"));
+        this.keySound = Gdx.audio.newSound(Gdx.files.internal("sounds/key.ogg"));
+        this.levelSound = Gdx.audio.newSound(Gdx.files.internal("sounds/level.ogg"));
     }
 
     // create different types of blocks in random location
@@ -343,6 +355,7 @@ public class LevelScreen extends BaseScreen {
                     this.scroll = false;
                 } else {
                     if (this.lives > 0) {
+                        this.dieSound.play();
                         this.lives--;
                         this.livesTable.removeActorAt(this.lives, false);
                     }
@@ -358,6 +371,7 @@ public class LevelScreen extends BaseScreen {
         }
 
         if (this.player.overlaps(this.goal, 0.8f) && this.key && this.royal) {
+            this.levelSound.play();
             this.levelPassed = true;
             this.player.setVisible(false);
             this.player.setPosition(-10000, -10000);
@@ -401,11 +415,14 @@ public class LevelScreen extends BaseScreen {
 
     private void checkForBlockValue(Block block) {
         if (block instanceof BlockTreasure) {
+            this.coinSound.play();
             this.score += 5;
             this.scoreLabel.setText(MainGame.getScoreString(this.score));
         } else if (block instanceof BlockKey) {
+            this.keySound.play();
             this.key = true;
         } else if (block instanceof BlockRoyal) {
+            this.keySound.play();
             this.score += 50;
             this.scoreLabel.setText(MainGame.getScoreString(this.score));
             this.royal = true;

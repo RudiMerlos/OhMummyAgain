@@ -4,6 +4,8 @@ import org.rmc.MainGame;
 import org.rmc.entity.Explosion;
 import org.rmc.entity.Mummy;
 import org.rmc.entity.Player;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public class BlockMummy extends Block {
@@ -28,8 +30,12 @@ public class BlockMummy extends Block {
         super.act(delta);
         if (this.isDiscovered()) {
             this.waitExplosion += delta;
-            if (this.waitExplosion >= 2.1 && this.waitExplosion < 2.2)
+            if (this.waitExplosion >= 2.1 && this.waitExplosion < 2.2) {
                 new Explosion(this.getX() + this.getWidth() - 48, this.getY(), this.stage);
+                Sound explosionSound =
+                        Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.ogg"));
+                explosionSound.play(0.5f);
+            }
             if (this.isAnimationFinished() && !this.mummyDiscovered) {
                 this.mummyDiscovered = true;
                 Mummy mummy = new Mummy(0, 0, this.stage, this.player, MainGame.getMummyRange(),

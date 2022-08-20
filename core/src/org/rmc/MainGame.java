@@ -2,6 +2,8 @@ package org.rmc;
 
 import org.rmc.framework.base.BaseGame;
 import org.rmc.screen.MenuScreen;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 
 public class MainGame extends BaseGame {
 
@@ -36,6 +38,9 @@ public class MainGame extends BaseGame {
     @Override
     public void create() {
         super.create();
+        Music music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
+        music.setLooping(true);
+        music.play();
         BaseGame.setActiveScreen(new MenuScreen());
     }
 
