@@ -384,7 +384,7 @@ public class LevelScreen extends BaseScreen {
         }
 
         if (this.gameOver != null && this.gameOver.isAnimationFinished()) {
-            BaseScreen.waitForTime(2000);
+            BaseScreen.waitForTime(1000);
             this.reset();
             BaseGame.setActiveScreen(new ScoreScreen());
         }
