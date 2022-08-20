@@ -6,6 +6,7 @@ import org.rmc.entity.Direction;
 import org.rmc.entity.Footprint;
 import org.rmc.entity.GameOver;
 import org.rmc.entity.Goal;
+import org.rmc.entity.LevelPassDialog;
 import org.rmc.entity.Mummy;
 import org.rmc.entity.Player;
 import org.rmc.entity.Solid;
@@ -50,6 +51,15 @@ public class LevelScreen extends BaseScreen {
     private Label scoreLabel;
     private Label livesLabel;
     private Table livesTable;
+
+    private Table levelPassTable;
+    private Label pyramidTitleLabel;
+    private Label pyramidLabel;
+    private Label levelTitleLabel;
+    private Label levelLabel;
+    private Label levelPassLabel;
+
+    private boolean levelPassed;
 
     @Override
     public void initialize() {
@@ -134,6 +144,8 @@ public class LevelScreen extends BaseScreen {
 
         this.scroll = false;
 
+        this.levelPassed = false;
+
         Color color = Color.valueOf(MainGame.TITLE_COLOR);
         this.scoreTitleLabel = new Label("SCORE", BaseGame.labelStyle);
         this.scoreTitleLabel.setColor(color);
@@ -158,6 +170,39 @@ public class LevelScreen extends BaseScreen {
         this.uiTable.add(this.scoreLabel).width(250);
         this.uiTable.add(this.livesLabel).width(100);
         this.uiTable.add(this.livesTable);
+
+        this.levelPassTable = new Table();
+        this.uiStage.addActor(this.levelPassTable);
+        this.levelPassTable.setFillParent(true);
+        this.levelPassTable.setVisible(false);
+
+        color = Color.valueOf(MainGame.TITLE_COLOR);
+        this.pyramidTitleLabel = new Label("Pyramid", BaseGame.labelStyle);
+        this.pyramidTitleLabel.setColor(color);
+        this.levelTitleLabel = new Label("Level", BaseGame.labelStyle);
+        this.levelTitleLabel.setColor(color);
+
+        color = Color.valueOf(MainGame.SCORE_COLOR);
+        this.pyramidLabel =
+                new Label(String.valueOf(((MainGame.getLevel() - 1) / 5) + 1), BaseGame.labelStyle);
+        this.pyramidLabel.setColor(color);
+        this.levelLabel = new Label(String.valueOf(MainGame.getLevel()), BaseGame.labelStyle);
+        this.levelLabel.setColor(color);
+
+        color = Color.valueOf(MainGame.LEVEL_COLOR);
+        this.levelPassLabel =
+                new Label("    Level cleared.\n\nPress \"C\" to continue.", BaseGame.labelStyle);
+        this.levelPassLabel.setColor(color);
+        this.levelPassLabel.setFontScale(0.8f);
+
+        this.levelPassTable.padTop(110);
+        this.levelPassTable.add(this.pyramidTitleLabel).left().padLeft(60).padBottom(20);
+        this.levelPassTable.add(this.pyramidLabel).left().padBottom(20);
+        this.levelPassTable.row();
+        this.levelPassTable.add(this.levelTitleLabel).left().padLeft(60).padBottom(20);
+        this.levelPassTable.add(this.levelLabel).left().padBottom(20);
+        this.levelPassTable.row();
+        this.levelPassTable.add(this.levelPassLabel).colspan(2).center().padTop(20);
     }
 
     // create different types of blocks in random location
@@ -313,25 +358,15 @@ public class LevelScreen extends BaseScreen {
         }
 
         if (this.player.overlaps(this.goal, 0.8f) && this.key && this.royal) {
+            this.levelPassed = true;
             this.player.setVisible(false);
             this.player.setPosition(-10000, -10000);
-            BaseScreen.waitForTime(500);
             MainGame.setLives(this.lives);
             MainGame.setScore(this.score);
             MainGame.incrementNumberMummies();
             MainGame.incrementLevel();
-
-            if ((MainGame.getLevel() - 1) % 5 == 0) {
-                if ((MainGame.getLevel() % 10 - 1) == 0)
-                    MainGame.setLives(this.lives + 1);
-                else
-                    MainGame.setScore(this.score + 200);
-                MainGame.setNumberMummies(1);
-                MainGame.incrementMummyRange();
-                BaseGame.setActiveScreen(new LevelPass());
-            } else {
-                BaseGame.setActiveScreen(new LevelScreen());
-            }
+            new LevelPassDialog(0, 0, this.mainStage);
+            this.levelPassTable.setVisible(true);
         }
 
         if (this.gameOver != null && this.gameOver.isAnimationFinished()) {
@@ -394,6 +429,21 @@ public class LevelScreen extends BaseScreen {
             this.paused = !this.paused;
             BaseScreen.sleep(100);
         }
+
+        if (keycode == Keys.C && this.levelPassed) {
+            if ((MainGame.getLevel() - 1) % 5 == 0) {
+                if ((MainGame.getLevel() % 10 - 1) == 0)
+                    MainGame.setLives(this.lives + 1);
+                else
+                    MainGame.setScore(this.score + 200);
+                MainGame.setNumberMummies(1);
+                MainGame.incrementMummyRange();
+                BaseGame.setActiveScreen(new LevelPass());
+            } else {
+                BaseGame.setActiveScreen(new LevelScreen());
+            }
+        }
+
         return false;
     }
 

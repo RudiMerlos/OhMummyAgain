@@ -15,6 +15,7 @@ public class MainGame extends BaseGame {
 
     public static final String TITLE_COLOR = "f36110";
     public static final String SCORE_COLOR = "5171ff";
+    public static final String LEVEL_COLOR = "dcc93a";
 
     public static final int INITIAL_LEVEL = 1;
     public static final int INITIAL_LIVES = 5;
