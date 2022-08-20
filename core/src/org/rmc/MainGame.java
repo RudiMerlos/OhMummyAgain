@@ -1,7 +1,7 @@
 package org.rmc;
 
 import org.rmc.framework.base.BaseGame;
-import org.rmc.screen.LevelScreen;
+import org.rmc.screen.MenuScreen;
 
 public class MainGame extends BaseGame {
 
@@ -28,10 +28,14 @@ public class MainGame extends BaseGame {
     private static int numberMummies = INITIAL_NUMBER_MUMMIES;
     private static int mummyRange = INITIAL_MUMMY_RANGE;
 
+    private static int[] scores = {2500, 2000, 1500, 1000, 500};
+    private static String[] scoreNames =
+            {"Stupendous!", "Excelent!", "Very Good!", "Quite Good", "Not Bad"};
+
     @Override
     public void create() {
         super.create();
-        BaseGame.setActiveScreen(new LevelScreen());
+        BaseGame.setActiveScreen(new MenuScreen());
     }
 
     public static int getNumberMummies() {
@@ -90,6 +94,29 @@ public class MainGame extends BaseGame {
 
     public static void incrementLevel() {
         level++;
+    }
+
+    public static String getScoreRecord(int pos) {
+        return getScoreString(scores[pos]) + " " + scoreNames[pos];
+    }
+
+    public static void setScoreRecord(int s, String n) {
+        int i;
+        for (i = 0; i < 5; i++) {
+            if (s > scores[i])
+                break;
+        }
+        for (int j = 4; j > i; j--)
+            scores[j] = scores[j - 1];
+        scores[i] = s;
+    }
+
+    public static String getScoreString(int s) {
+        String scoreStr = String.valueOf(s);
+        StringBuilder score = new StringBuilder(scoreStr);
+        for (int i = 0; i < 5 - scoreStr.length(); i++)
+            score.insert(0, '0');
+        return score.toString();
     }
 
 }

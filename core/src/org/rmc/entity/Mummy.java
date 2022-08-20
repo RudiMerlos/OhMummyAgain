@@ -108,8 +108,13 @@ public class Mummy extends BaseActor {
     }
 
     private void moveMummy(CrossPoint cross) {
-        float distance = (float) Math.sqrt(Math.pow(this.player.getX() - this.getX(), 2)
-                + Math.pow(this.player.getY() - this.getY(), 2));
+        float distance;
+
+        if (this.player != null)
+            distance = (float) Math.sqrt(Math.pow(this.player.getX() - this.getX(), 2)
+                    + Math.pow(this.player.getY() - this.getY(), 2));
+        else
+            distance = this.range;
 
         if (distance < this.range) {
             this.moveToPlayer(cross);

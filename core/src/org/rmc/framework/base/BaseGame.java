@@ -28,7 +28,9 @@ public abstract class BaseGame extends Game {
     // NPD + BitmapFont + Color
     public static final TextButtonStyle textButtonStyle = new TextButtonStyle();
 
-    private static Color colorFont = Color.WHITE;
+    private static FreeTypeFontGenerator fontGenerator = null;
+
+    public static final FreeTypeFontParameter fontParameters = new FreeTypeFontParameter();
 
     /**
      * Called when game is initialized. Stores global reference to game object.
@@ -45,20 +47,16 @@ public abstract class BaseGame extends Game {
         Gdx.input.setInputProcessor(new InputMultiplexer());
 
         // parameters for generating a custom bitmap font
-        FreeTypeFontGenerator fontGenerator =
-                new FreeTypeFontGenerator(Gdx.files.internal("fonts/amstrad_cpc464.ttf"));
-        FreeTypeFontParameter fontParameters = new FreeTypeFontParameter();
+        fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/amstrad_cpc464.ttf"));
         fontParameters.size = 24;
-        fontParameters.color = colorFont;
+        fontParameters.color = Color.WHITE;
         fontParameters.borderWidth = 0.5f;
-        fontParameters.borderColor = colorFont;
+        fontParameters.borderColor = Color.WHITE;
         fontParameters.borderStraight = true;
         fontParameters.minFilter = TextureFilter.Linear;
         fontParameters.magFilter = TextureFilter.Linear;
 
-        BitmapFont customFont = fontGenerator.generateFont(fontParameters);
-
-        labelStyle.font = customFont;
+        BitmapFont customFont = setLabelStyleFont();
 
         NinePatch buttonPatch = new NinePatch(new Texture("images/button.png"), 24, 24, 24, 24);
         textButtonStyle.up = new NinePatchDrawable(buttonPatch);
@@ -75,8 +73,10 @@ public abstract class BaseGame extends Game {
         game.setScreen(screen);
     }
 
-    public static void setColorFont(Color color) {
-        colorFont = color;
+    public static BitmapFont setLabelStyleFont() {
+        BitmapFont customFont = fontGenerator.generateFont(fontParameters);
+        labelStyle.font = customFont;
+        return customFont;
     }
 
 }

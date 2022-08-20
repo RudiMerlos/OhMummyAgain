@@ -135,17 +135,14 @@ public class LevelScreen extends BaseScreen {
         this.scroll = false;
 
         Color color = Color.valueOf(MainGame.TITLE_COLOR);
-        BaseGame.setColorFont(color);
         this.scoreTitleLabel = new Label("SCORE", BaseGame.labelStyle);
         this.scoreTitleLabel.setColor(color);
 
-        BaseGame.setColorFont(color);
         this.livesLabel = new Label("MEN", BaseGame.labelStyle);
         this.livesLabel.setColor(color);
 
         color = Color.valueOf(MainGame.SCORE_COLOR);
-        BaseGame.setColorFont(color);
-        this.scoreLabel = new Label(this.getScoreString(), BaseGame.labelStyle);
+        this.scoreLabel = new Label(MainGame.getScoreString(this.score), BaseGame.labelStyle);
         this.scoreLabel.setColor(color);
 
         this.livesTable = new Table();
@@ -156,8 +153,8 @@ public class LevelScreen extends BaseScreen {
         }
 
         this.uiTable.left().top();
-        this.uiTable.pad(50);
-        this.uiTable.add(this.scoreTitleLabel).width(200);
+        this.uiTable.pad(50).padLeft(80);
+        this.uiTable.add(this.scoreTitleLabel).width(150);
         this.uiTable.add(this.scoreLabel).width(250);
         this.uiTable.add(this.livesLabel).width(100);
         this.uiTable.add(this.livesTable);
@@ -318,7 +315,7 @@ public class LevelScreen extends BaseScreen {
         if (this.player.overlaps(this.goal, 0.8f) && this.key && this.royal) {
             this.player.setVisible(false);
             this.player.setPosition(-10000, -10000);
-            BaseScreen.waitForTime(1000);
+            BaseScreen.waitForTime(500);
             MainGame.setLives(this.lives);
             MainGame.setScore(this.score);
             MainGame.incrementNumberMummies();
@@ -340,7 +337,7 @@ public class LevelScreen extends BaseScreen {
         if (this.gameOver != null && this.gameOver.isAnimationFinished()) {
             BaseScreen.waitForTime(2000);
             this.reset();
-            BaseGame.setActiveScreen(new LevelScreen());
+            BaseGame.setActiveScreen(new ScoreScreen());
         }
     }
 
@@ -370,25 +367,18 @@ public class LevelScreen extends BaseScreen {
     private void checkForBlockValue(Block block) {
         if (block instanceof BlockTreasure) {
             this.score += 5;
-            this.scoreLabel.setText(this.getScoreString());
+            this.scoreLabel.setText(MainGame.getScoreString(this.score));
         } else if (block instanceof BlockKey) {
             this.key = true;
         } else if (block instanceof BlockRoyal) {
             this.score += 50;
-            this.scoreLabel.setText(this.getScoreString());
+            this.scoreLabel.setText(MainGame.getScoreString(this.score));
             this.royal = true;
         } else if (block instanceof BlockScroll) {
             this.scroll = true;
         }
     }
 
-    private String getScoreString() {
-        String scoreStr = String.valueOf(this.score);
-        StringBuilder score = new StringBuilder(scoreStr);
-        for (int i = 0; i < 5 - scoreStr.length(); i++)
-            score.insert(0, '0');
-        return score.toString();
-    }
 
     private void reset() {
         MainGame.setLevel(MainGame.INITIAL_LEVEL);

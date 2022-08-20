@@ -6,7 +6,7 @@
  <tileset firstgid="2" name="header" tilewidth="24" tileheight="24" tilecount="1" columns="1">
   <image source="header.png" width="24" height="24"/>
  </tileset>
- <imagelayer id="2" name="Capa de Imagen 1" opacity="0.5">
+ <imagelayer id="2" name="Capa de Imagen 1" visible="0">
   <image source="background.png" width="984" height="744"/>
  </imagelayer>
  <layer id="1" name="Capa de patrones 1" width="41" height="31">
@@ -1731,7 +1731,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="9" name="Cross" visible="0">
+ <objectgroup id="9" name="Cross">
   <object id="847" x="71" y="191" width="2" height="2">
    <properties>
     <property name="east" value="true"/>
