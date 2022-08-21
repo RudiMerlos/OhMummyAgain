@@ -31,7 +31,7 @@ public class MainGame extends BaseGame {
     private static int numberMummies = INITIAL_NUMBER_MUMMIES;
     private static int mummyRange = INITIAL_MUMMY_RANGE;
 
-    private static int[] scores = {2500, 2000, 1500, 1000, 0};
+    private static int[] scores = {2500, 2000, 1500, 1000, 500};
     private static String[] scoreNames =
             {"Stupendous!", "Excelent!", "Very Good!", "Quite Good", "Not Bad"};
 
