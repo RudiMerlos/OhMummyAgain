@@ -49,6 +49,9 @@ public class LevelScreen extends BaseScreen {
 
     private boolean scroll;
 
+    private boolean levelPassed;
+    private boolean win;
+
     private Label scoreTitleLabel;
     private Label scoreLabel;
     private Label livesLabel;
@@ -60,8 +63,6 @@ public class LevelScreen extends BaseScreen {
     private Label levelTitleLabel;
     private Label levelLabel;
     private Label levelPassLabel;
-
-    private boolean levelPassed;
 
     private Sound coinSound;
     private Sound dieSound;
@@ -153,6 +154,8 @@ public class LevelScreen extends BaseScreen {
 
         this.levelPassed = false;
 
+        this.win = false;
+
         Color color = Color.valueOf(MainGame.TITLE_COLOR);
         this.scoreTitleLabel = new Label("SCORE", BaseGame.labelStyle);
         this.scoreTitleLabel.setColor(color);
@@ -190,10 +193,11 @@ public class LevelScreen extends BaseScreen {
         this.levelTitleLabel.setColor(color);
 
         color = Color.valueOf(MainGame.SCORE_COLOR);
-        this.pyramidLabel =
-                new Label(String.valueOf(((MainGame.getLevel() - 1) / 5) + 1), BaseGame.labelStyle);
+        int pyramid = ((MainGame.getLevel() - 1) / 5) + 1;
+        this.pyramidLabel = new Label(String.valueOf(pyramid), BaseGame.labelStyle);
         this.pyramidLabel.setColor(color);
-        this.levelLabel = new Label(String.valueOf(MainGame.getLevel()), BaseGame.labelStyle);
+        int level = MainGame.getLevel() % 5;
+        this.levelLabel = new Label(String.valueOf(level == 0 ? 5 : level), BaseGame.labelStyle);
         this.levelLabel.setColor(color);
 
         color = Color.valueOf(MainGame.LEVEL_COLOR);
@@ -377,14 +381,21 @@ public class LevelScreen extends BaseScreen {
             this.player.setPosition(-10000, -10000);
             MainGame.setLives(this.lives);
             MainGame.setScore(this.score);
-            MainGame.incrementNumberMummies();
-            MainGame.incrementLevel();
-            new LevelPassDialog(0, 0, this.mainStage);
-            this.levelPassTable.setVisible(true);
+            if (MainGame.getLevel() < 25) {
+                MainGame.incrementNumberMummies();
+                MainGame.incrementLevel();
+                new LevelPassDialog(0, 0, this.mainStage);
+                this.levelPassTable.setVisible(true);
+            } else {
+                this.win = true;
+                BaseActor winActor = new BaseActor(0, 0, this.mainStage);
+                winActor.loadTexture("images/win.png");
+                winActor.setPosition(MainGame.WIDTH / 2 - winActor.getWidth() / 2,
+                        MainGame.HEIGHT / 2 - winActor.getHeight() / 1.23f);
+            }
         }
 
         if (this.gameOver != null && this.gameOver.isAnimationFinished()) {
-            BaseScreen.waitForTime(1000);
             this.reset();
             BaseGame.setActiveScreen(new ScoreScreen());
         }
@@ -447,17 +458,21 @@ public class LevelScreen extends BaseScreen {
             BaseScreen.sleep(100);
         }
 
-        if (keycode == Keys.C && this.levelPassed) {
-            if ((MainGame.getLevel() - 1) % 5 == 0) {
-                if ((MainGame.getLevel() % 10 - 1) == 0)
-                    MainGame.setLives(this.lives + 1);
-                else
-                    MainGame.setScore(this.score + 200);
-                MainGame.setNumberMummies(1);
-                MainGame.incrementMummyRange();
-                BaseGame.setActiveScreen(new LevelPass());
-            } else {
-                BaseGame.setActiveScreen(new LevelScreen());
+        if (keycode == Keys.C) {
+            if (this.win) {
+                BaseGame.setActiveScreen(new ScoreScreen());
+            } else if (this.levelPassed) {
+                if ((MainGame.getLevel() - 1) % 5 == 0) {
+                    if ((MainGame.getLevel() % 10 - 1) == 0)
+                        MainGame.setLives(this.lives + 1);
+                    else
+                        MainGame.setScore(this.score + 200);
+                    MainGame.setNumberMummies(1);
+                    MainGame.incrementMummyRange();
+                    BaseGame.setActiveScreen(new LevelPass());
+                } else {
+                    BaseGame.setActiveScreen(new LevelScreen());
+                }
             }
         }
 
