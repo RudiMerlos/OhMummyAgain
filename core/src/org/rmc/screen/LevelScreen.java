@@ -384,7 +384,8 @@ public class LevelScreen extends BaseScreen {
                     this.scroll = false;
                 } else {
                     if (this.lives > 0) {
-                        this.dieSound.play();
+                        if (MainGame.getSoundsOn())
+                            this.dieSound.play();
                         this.lives--;
                         this.livesTable.removeActorAt(this.lives, false);
                     }
@@ -400,7 +401,8 @@ public class LevelScreen extends BaseScreen {
         }
 
         if (this.player.overlaps(this.goal, 0.8f) && this.key && this.royal) {
-            this.levelSound.play();
+            if (MainGame.getSoundsOn())
+                this.levelSound.play();
             this.levelPassed = true;
             this.player.setVisible(false);
             this.player.setPosition(-10000, -10000);
@@ -462,14 +464,17 @@ public class LevelScreen extends BaseScreen {
 
     private void checkForBlockValue(Block block) {
         if (block instanceof BlockTreasure) {
-            this.coinSound.play();
+            if (MainGame.getSoundsOn())
+                this.coinSound.play();
             this.score += 5;
             this.scoreLabel.setText(MainGame.getScoreString(this.score));
         } else if (block instanceof BlockKey) {
-            this.keySound.play();
+            if (MainGame.getSoundsOn())
+                this.keySound.play();
             this.key = true;
         } else if (block instanceof BlockRoyal) {
-            this.keySound.play();
+            if (MainGame.getSoundsOn())
+                this.keySound.play();
             this.score += 50;
             this.scoreLabel.setText(MainGame.getScoreString(this.score));
             this.royal = true;

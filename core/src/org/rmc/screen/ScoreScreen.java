@@ -115,6 +115,8 @@ public class ScoreScreen extends BaseScreen {
     public boolean keyDown(int keycode) {
         if (keycode == Keys.P)
             BaseGame.setActiveScreen(new LevelScreen());
+        else if (keycode == Keys.O)
+            BaseGame.setActiveScreen(new OptionsScreen());
         else if (keycode == Keys.I)
             BaseGame.setActiveScreen(new InstructionsScreen());
         return false;

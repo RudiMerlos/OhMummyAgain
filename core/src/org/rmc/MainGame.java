@@ -37,10 +37,14 @@ public class MainGame extends BaseGame {
 
     public static boolean winGame = false;
 
+    private static boolean soundsOn = true;
+
+    private static Music music;
+
     @Override
     public void create() {
         super.create();
-        Music music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         music.setLooping(true);
         music.play();
         BaseGame.setActiveScreen(new MenuScreen());
@@ -132,6 +136,21 @@ public class MainGame extends BaseGame {
 
     public static int getMinScore() {
         return scores[scores.length - 1];
+    }
+
+    public static void setMusicOn(boolean musicOn) {
+        if (musicOn)
+            music.setVolume(1);
+        else
+            music.setVolume(0);
+    }
+
+    public static boolean getSoundsOn() {
+        return soundsOn;
+    }
+
+    public static void setSoundsOn(boolean sounds) {
+        soundsOn = sounds;
     }
 
 }
