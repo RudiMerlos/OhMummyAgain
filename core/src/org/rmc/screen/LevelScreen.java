@@ -8,6 +8,7 @@ import org.rmc.entity.GameOver;
 import org.rmc.entity.Goal;
 import org.rmc.entity.LevelPassDialog;
 import org.rmc.entity.Mummy;
+import org.rmc.entity.NewScoreDialog;
 import org.rmc.entity.Player;
 import org.rmc.entity.Solid;
 import org.rmc.entity.block.Block;
@@ -50,7 +51,10 @@ public class LevelScreen extends BaseScreen {
     private boolean scroll;
 
     private boolean levelPassed;
-    private boolean win;
+
+    private boolean newScore;
+    private StringBuilder nameMaxScore;
+    private boolean inputCharacter;
 
     private Label scoreTitleLabel;
     private Label scoreLabel;
@@ -63,6 +67,9 @@ public class LevelScreen extends BaseScreen {
     private Label levelTitleLabel;
     private Label levelLabel;
     private Label levelPassLabel;
+
+    private Table maxScoreTable;
+    private Label nameScoreLabel;
 
     private Sound coinSound;
     private Sound dieSound;
@@ -154,66 +161,13 @@ public class LevelScreen extends BaseScreen {
 
         this.levelPassed = false;
 
-        this.win = false;
+        MainGame.winGame = false;
 
-        Color color = Color.valueOf(MainGame.TITLE_COLOR);
-        this.scoreTitleLabel = new Label("SCORE", BaseGame.labelStyle);
-        this.scoreTitleLabel.setColor(color);
+        this.newScore = false;
+        this.nameMaxScore = new StringBuilder();
+        this.inputCharacter = false;
 
-        this.livesLabel = new Label("MEN", BaseGame.labelStyle);
-        this.livesLabel.setColor(color);
-
-        color = Color.valueOf(MainGame.SCORE_COLOR);
-        this.scoreLabel = new Label(MainGame.getScoreString(this.score), BaseGame.labelStyle);
-        this.scoreLabel.setColor(color);
-
-        this.livesTable = new Table();
-        for (int i = 0; i < this.lives; i++) {
-            BaseActor liveIcon = new BaseActor(0, 0, this.uiStage);
-            liveIcon.loadTexture("images/player_icon.png");
-            this.livesTable.add(liveIcon);
-        }
-
-        this.uiTable.left().top();
-        this.uiTable.pad(50).padLeft(80);
-        this.uiTable.add(this.scoreTitleLabel).width(150);
-        this.uiTable.add(this.scoreLabel).width(250);
-        this.uiTable.add(this.livesLabel).width(100);
-        this.uiTable.add(this.livesTable);
-
-        this.levelPassTable = new Table();
-        this.uiStage.addActor(this.levelPassTable);
-        this.levelPassTable.setFillParent(true);
-        this.levelPassTable.setVisible(false);
-
-        color = Color.valueOf(MainGame.TITLE_COLOR);
-        this.pyramidTitleLabel = new Label("Pyramid", BaseGame.labelStyle);
-        this.pyramidTitleLabel.setColor(color);
-        this.levelTitleLabel = new Label("Level", BaseGame.labelStyle);
-        this.levelTitleLabel.setColor(color);
-
-        color = Color.valueOf(MainGame.SCORE_COLOR);
-        int pyramid = ((MainGame.getLevel() - 1) / 5) + 1;
-        this.pyramidLabel = new Label(String.valueOf(pyramid), BaseGame.labelStyle);
-        this.pyramidLabel.setColor(color);
-        int level = MainGame.getLevel() % 5;
-        this.levelLabel = new Label(String.valueOf(level == 0 ? 5 : level), BaseGame.labelStyle);
-        this.levelLabel.setColor(color);
-
-        color = Color.valueOf(MainGame.LEVEL_COLOR);
-        this.levelPassLabel =
-                new Label("    Level cleared.\n\nPress \"C\" to continue.", BaseGame.labelStyle);
-        this.levelPassLabel.setColor(color);
-        this.levelPassLabel.setFontScale(0.8f);
-
-        this.levelPassTable.padTop(110);
-        this.levelPassTable.add(this.pyramidTitleLabel).left().padLeft(60).padBottom(20);
-        this.levelPassTable.add(this.pyramidLabel).left().padBottom(20);
-        this.levelPassTable.row();
-        this.levelPassTable.add(this.levelTitleLabel).left().padLeft(60).padBottom(20);
-        this.levelPassTable.add(this.levelLabel).left().padBottom(20);
-        this.levelPassTable.row();
-        this.levelPassTable.add(this.levelPassLabel).colspan(2).center().padTop(20);
+        this.initializeTables();
 
         this.coinSound = Gdx.audio.newSound(Gdx.files.internal("sounds/coin.ogg"));
         this.dieSound = Gdx.audio.newSound(Gdx.files.internal("sounds/die.ogg"));
@@ -330,6 +284,77 @@ public class LevelScreen extends BaseScreen {
         }
     }
 
+    private void initializeTables() {
+        Color color = Color.valueOf(MainGame.TITLE_COLOR);
+        this.scoreTitleLabel = new Label("SCORE", BaseGame.labelStyle);
+        this.scoreTitleLabel.setColor(color);
+
+        this.livesLabel = new Label("MEN", BaseGame.labelStyle);
+        this.livesLabel.setColor(color);
+
+        color = Color.valueOf(MainGame.SCORE_COLOR);
+        this.scoreLabel = new Label(MainGame.getScoreString(this.score), BaseGame.labelStyle);
+        this.scoreLabel.setColor(color);
+
+        this.livesTable = new Table();
+        for (int i = 0; i < this.lives; i++) {
+            BaseActor liveIcon = new BaseActor(0, 0, this.uiStage);
+            liveIcon.loadTexture("images/player_icon.png");
+            this.livesTable.add(liveIcon);
+        }
+
+        this.uiTable.left().top();
+        this.uiTable.pad(50).padLeft(80);
+        this.uiTable.add(this.scoreTitleLabel).width(150);
+        this.uiTable.add(this.scoreLabel).width(250);
+        this.uiTable.add(this.livesLabel).width(100);
+        this.uiTable.add(this.livesTable);
+
+        this.levelPassTable = new Table();
+        this.uiStage.addActor(this.levelPassTable);
+        this.levelPassTable.setFillParent(true);
+        this.levelPassTable.setVisible(false);
+
+        color = Color.valueOf(MainGame.TITLE_COLOR);
+        this.pyramidTitleLabel = new Label("Pyramid", BaseGame.labelStyle);
+        this.pyramidTitleLabel.setColor(color);
+        this.levelTitleLabel = new Label("Level", BaseGame.labelStyle);
+        this.levelTitleLabel.setColor(color);
+
+        color = Color.valueOf(MainGame.SCORE_COLOR);
+        int pyramid = ((MainGame.getLevel() - 1) / 5) + 1;
+        this.pyramidLabel = new Label(String.valueOf(pyramid), BaseGame.labelStyle);
+        this.pyramidLabel.setColor(color);
+        int level = MainGame.getLevel() % 5;
+        this.levelLabel = new Label(String.valueOf(level == 0 ? 5 : level), BaseGame.labelStyle);
+        this.levelLabel.setColor(color);
+
+        color = Color.valueOf(MainGame.LEVEL_COLOR);
+        this.levelPassLabel =
+                new Label("    Level cleared.\n\nPress \"C\" to continue.", BaseGame.labelStyle);
+        this.levelPassLabel.setColor(color);
+        this.levelPassLabel.setFontScale(0.8f);
+
+        this.levelPassTable.padTop(110);
+        this.levelPassTable.add(this.pyramidTitleLabel).left().padLeft(60).padBottom(20);
+        this.levelPassTable.add(this.pyramidLabel).left().padBottom(20);
+        this.levelPassTable.row();
+        this.levelPassTable.add(this.levelTitleLabel).left().padLeft(60).padBottom(20);
+        this.levelPassTable.add(this.levelLabel).left().padBottom(20);
+        this.levelPassTable.row();
+        this.levelPassTable.add(this.levelPassLabel).colspan(2).center().padTop(20);
+
+        this.maxScoreTable = new Table();
+        this.uiStage.addActor(this.maxScoreTable);
+        this.maxScoreTable.setFillParent(true);
+        this.maxScoreTable.setVisible(false);
+
+        this.nameScoreLabel = new Label("", BaseGame.labelStyle);
+        this.nameScoreLabel.setColor(Color.BLACK);
+
+        this.maxScoreTable.add(this.nameScoreLabel).left().padTop(180);
+    }
+
     @Override
     public void update(float delta) {
         this.checkForBlocks();
@@ -387,7 +412,7 @@ public class LevelScreen extends BaseScreen {
                 new LevelPassDialog(0, 0, this.mainStage);
                 this.levelPassTable.setVisible(true);
             } else {
-                this.win = true;
+                MainGame.winGame = true;
                 BaseActor winActor = new BaseActor(0, 0, this.mainStage);
                 winActor.loadTexture("images/win.png");
                 winActor.setPosition(MainGame.WIDTH / 2 - winActor.getWidth() / 2,
@@ -396,8 +421,19 @@ public class LevelScreen extends BaseScreen {
         }
 
         if (this.gameOver != null && this.gameOver.isAnimationFinished()) {
-            this.reset();
-            BaseGame.setActiveScreen(new ScoreScreen());
+            if (this.score > MainGame.getMinScore()) {
+                this.newScore = true;
+                this.inputCharacter = true;
+                new NewScoreDialog(0, 0, this.mainStage);
+                this.maxScoreTable.setVisible(true);
+            } else {
+                this.reset();
+                BaseGame.setActiveScreen(new ScoreScreen());
+            }
+        }
+
+        if ((this.gameOver != null || MainGame.winGame) && this.newScore) {
+            this.nameScoreLabel.setText(this.nameMaxScore.toString());
         }
     }
 
@@ -459,8 +495,14 @@ public class LevelScreen extends BaseScreen {
         }
 
         if (keycode == Keys.C) {
-            if (this.win) {
-                BaseGame.setActiveScreen(new ScoreScreen());
+            if (MainGame.winGame) {
+                if (this.score > MainGame.getMinScore()) {
+                    this.newScore = true;
+                    new NewScoreDialog(0, 0, this.mainStage);
+                    this.maxScoreTable.setVisible(true);
+                } else {
+                    BaseGame.setActiveScreen(new ScoreScreen());
+                }
             } else if (this.levelPassed) {
                 if ((MainGame.getLevel() - 1) % 5 == 0) {
                     if ((MainGame.getLevel() % 10 - 1) == 0)
@@ -476,6 +518,28 @@ public class LevelScreen extends BaseScreen {
             }
         }
 
+        if (this.newScore && (this.gameOver != null || MainGame.winGame)) {
+            if (keycode == Keys.ENTER) {
+                MainGame.setScoreRecord(this.score, this.nameMaxScore.toString());
+                this.reset();
+                BaseGame.setActiveScreen(new ScoreScreen());
+            } else if (keycode == Keys.BACKSPACE && this.nameMaxScore.length() > 0) {
+                this.nameMaxScore.deleteCharAt(this.nameMaxScore.length() - 1);
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        if ((this.gameOver != null || MainGame.winGame) && this.inputCharacter
+                && this.nameMaxScore.length() < 12) {
+            if (character != 8)
+                this.nameMaxScore.append(character);
+        } else if (this.newScore) {
+            this.inputCharacter = true;
+        }
         return false;
     }
 

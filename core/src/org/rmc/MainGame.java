@@ -31,9 +31,11 @@ public class MainGame extends BaseGame {
     private static int numberMummies = INITIAL_NUMBER_MUMMIES;
     private static int mummyRange = INITIAL_MUMMY_RANGE;
 
-    private static int[] scores = {2500, 2000, 1500, 1000, 500};
+    private static int[] scores = {2500, 2000, 1500, 1000, 0};
     private static String[] scoreNames =
             {"Stupendous!", "Excelent!", "Very Good!", "Quite Good", "Not Bad"};
+
+    public static boolean winGame = false;
 
     @Override
     public void create() {
@@ -112,9 +114,12 @@ public class MainGame extends BaseGame {
             if (s > scores[i])
                 break;
         }
-        for (int j = 4; j > i; j--)
+        for (int j = 4; j > i; j--) {
             scores[j] = scores[j - 1];
+            scoreNames[j] = scoreNames[j - 1];
+        }
         scores[i] = s;
+        scoreNames[i] = n;
     }
 
     public static String getScoreString(int s) {
@@ -123,6 +128,10 @@ public class MainGame extends BaseGame {
         for (int i = 0; i < 5 - scoreStr.length(); i++)
             score.insert(0, '0');
         return score.toString();
+    }
+
+    public static int getMinScore() {
+        return scores[scores.length - 1];
     }
 
 }

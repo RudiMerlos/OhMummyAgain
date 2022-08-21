@@ -49,12 +49,7 @@ public class ScoreScreen extends BaseScreen {
         this.scoreTable = new Table();
         BaseGame.fontParameters.size = 22;
         BaseGame.setLabelStyleFont();
-        for (int i = 0; i < 5; i++) {
-            Label label = new Label(MainGame.getScoreRecord(i), BaseGame.labelStyle);
-            label.setColor(Color.BLACK);
-            this.scoreTable.add(label).padBottom(20).expandX().left();
-            this.scoreTable.row();
-        }
+        this.setScoreTable();
 
         this.uiTable.padTop(40);
         this.uiTable.add(this.scoreTable);
@@ -99,6 +94,15 @@ public class ScoreScreen extends BaseScreen {
                 }
                 mummyNumberRight++;
             }
+        }
+    }
+
+    private void setScoreTable() {
+        for (int i = 0; i < 5; i++) {
+            Label label = new Label(MainGame.getScoreRecord(i), BaseGame.labelStyle);
+            label.setColor(Color.BLACK);
+            this.scoreTable.add(label).padBottom(20).expandX().left();
+            this.scoreTable.row();
         }
     }
 

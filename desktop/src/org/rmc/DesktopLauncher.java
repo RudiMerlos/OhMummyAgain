@@ -10,6 +10,7 @@ public class DesktopLauncher {
         config.setTitle("Oh Mummy Again");
         config.setWindowedMode(MainGame.WIDTH, MainGame.HEIGHT);
         config.setResizable(false);
+        config.setWindowIcon("images/player_icon.png");
         new Lwjgl3Application(new MainGame(), config);
     }
 }
