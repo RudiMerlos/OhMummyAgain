@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.rmc.MainGame.*;
 import org.rmc.framework.base.BaseActor;
+import org.rmc.framework.inputcontrol.InputGamepad;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -90,25 +93,32 @@ public class Player extends BaseActor {
     }
 
     private void movePlayer(Direction direction) {
+        float xAxis = 0;
+        float yAxis = 0;
+        if (Controllers.getControllers().size > 0) {
+            Controller gamepad = Controllers.getControllers().get(0);
+            xAxis = gamepad.getAxis(InputGamepad.getInstance().getAxisLeftX());
+            yAxis = gamepad.getAxis(InputGamepad.getInstance().getAxisLeftY());
+        }
         if (this.isVisible()) {
-            if ((Gdx.input.isKeyPressed(Keys.Q) || Gdx.input.isKeyPressed(Keys.UP))
+            if ((Gdx.input.isKeyPressed(Keys.Q) || Gdx.input.isKeyPressed(Keys.UP) || yAxis <= -1)
                     && direction.getRoute()[NORTH]) {
                 this.direction = NORTH;
                 this.setAnimation(this.animations.get(NORTH));
                 this.accelerateAtAngle(90);
-            } else if ((Gdx.input.isKeyPressed(Keys.A) || Gdx.input.isKeyPressed(Keys.DOWN))
-                    && direction.getRoute()[SOUTH]) {
+            } else if ((Gdx.input.isKeyPressed(Keys.A) || Gdx.input.isKeyPressed(Keys.DOWN)
+                    || yAxis >= 1) && direction.getRoute()[SOUTH]) {
                 this.direction = SOUTH;
                 this.setAnimation(this.animations.get(SOUTH));
                 this.accelerateAtAngle(270);
             }
-            if ((Gdx.input.isKeyPressed(Keys.O) || Gdx.input.isKeyPressed(Keys.LEFT))
+            if ((Gdx.input.isKeyPressed(Keys.O) || Gdx.input.isKeyPressed(Keys.LEFT) || xAxis <= -1)
                     && direction.getRoute()[WEST]) {
                 this.direction = WEST;
                 this.setAnimation(this.animations.get(WEST));
                 this.accelerateAtAngle(180);
-            } else if ((Gdx.input.isKeyPressed(Keys.P) || Gdx.input.isKeyPressed(Keys.RIGHT))
-                    && direction.getRoute()[EAST]) {
+            } else if ((Gdx.input.isKeyPressed(Keys.P) || Gdx.input.isKeyPressed(Keys.RIGHT)
+                    || xAxis >= 1) && direction.getRoute()[EAST]) {
                 this.direction = EAST;
                 this.setAnimation(this.animations.get(EAST));
                 this.accelerateAtAngle(0);

@@ -3,12 +3,14 @@ package org.rmc.screen;
 import org.rmc.MainGame;
 import org.rmc.framework.base.BaseActor;
 import org.rmc.framework.base.BaseGame;
-import org.rmc.framework.base.BaseScreen;
+import org.rmc.framework.inputcontrol.InputGamepad;
+import org.rmc.framework.inputcontrol.InputGamepadScreen;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
-public class OptionsScreen extends BaseScreen {
+public class OptionsScreen extends InputGamepadScreen {
 
     private static final int MUSIC = 1;
     private static final int SOUNDS = 2;
@@ -83,6 +85,13 @@ public class OptionsScreen extends BaseScreen {
         else if (keycode == Keys.N)
             this.answer = "No";
         else if (keycode == Keys.C && this.optionNumber == END)
+            BaseGame.setActiveScreen(new ScoreScreen());
+        return false;
+    }
+
+    @Override
+    public boolean buttonDown(Controller controller, int buttonCode) {
+        if (buttonCode == InputGamepad.getInstance().getButtonA() && this.optionNumber == END)
             BaseGame.setActiveScreen(new ScoreScreen());
         return false;
     }

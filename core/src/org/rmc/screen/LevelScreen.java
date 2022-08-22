@@ -23,10 +23,13 @@ import org.rmc.entity.block.OpenBlock;
 import org.rmc.framework.base.BaseActor;
 import org.rmc.framework.base.BaseGame;
 import org.rmc.framework.base.BaseScreen;
+import org.rmc.framework.inputcontrol.InputGamepad;
+import org.rmc.framework.inputcontrol.InputGamepadScreen;
 import org.rmc.framework.tilemap.TilemapActor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
@@ -34,7 +37,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-public class LevelScreen extends BaseScreen {
+public class LevelScreen extends InputGamepadScreen {
 
     private Player player;
     private Goal goal;
@@ -545,6 +548,40 @@ public class LevelScreen extends BaseScreen {
         } else if (this.newScore) {
             this.inputCharacter = true;
         }
+        return false;
+    }
+
+    @Override
+    public boolean buttonDown(Controller controller, int buttonCode) {
+        if (buttonCode == InputGamepad.getInstance().getButtonA()) {
+            if (MainGame.winGame) {
+                if (this.score > MainGame.getMinScore()) {
+                    this.newScore = true;
+                    new NewScoreDialog(0, 0, this.mainStage);
+                    this.maxScoreTable.setVisible(true);
+                } else {
+                    BaseGame.setActiveScreen(new ScoreScreen());
+                }
+            } else if (this.levelPassed) {
+                if ((MainGame.getLevel() - 1) % 5 == 0) {
+                    if ((MainGame.getLevel() % 10 - 1) == 0)
+                        MainGame.setLives(this.lives + 1);
+                    else
+                        MainGame.setScore(this.score + 200);
+                    MainGame.setNumberMummies(1);
+                    MainGame.incrementMummyRange();
+                    BaseGame.setActiveScreen(new LevelPass());
+                } else {
+                    BaseGame.setActiveScreen(new LevelScreen());
+                }
+            }
+        }
+
+        if (buttonCode == InputGamepad.getInstance().getButtonStart()) {
+            this.paused = !this.paused;
+            BaseScreen.sleep(100);
+        }
+
         return false;
     }
 
