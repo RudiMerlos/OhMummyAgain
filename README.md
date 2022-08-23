@@ -18,7 +18,7 @@
 
 ## CONTROLS
 
-You can control your team by using either a Joystick or the keyboard.
+You can control your team by using either a Joystick (only Xbox 360 controller compatible models work) or the keyboard.
 
 The keyboard keys are:
 
