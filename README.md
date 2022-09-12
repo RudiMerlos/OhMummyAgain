@@ -26,6 +26,7 @@ The keyboard keys are:
 - **DOWN**: *A* or *Down arrow*
 - **LEFT**: *O* or *Left arrow*
 - **RIGHT**: *P* or *Right arrow*
+- **PAUSE**: *ESCAPE*
 
 ## HOW TO EXECUTE OH MUMMY AGAIN
 
